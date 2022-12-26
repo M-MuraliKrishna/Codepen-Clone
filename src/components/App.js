@@ -1,64 +1,61 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
-import TopNavigation from './TopNavigation'
-import Footer from './Footer'
-
+import useLocalStorage from "../hooks/useLocalStorage";
+import { toHtml } from "@fortawesome/fontawesome-svg-core";
 
 function App() {
-  const [html, setHtml] = useState("");
-  const [css, setcss] = useState("");
-  const [js, setjs] = useState("");
+  const [html, setHtml] = useLocalStorage("html", "");
+  const [css, setCss] = useLocalStorage("css", "");
+  const [js, setJs] = useLocalStorage("js", "");
+  const [srcDoc, setSrcDoc] = useState("");
 
-  const srcDoc = `
-       <html>
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSrcDoc(`
+        <html>
           <body>${html}</body>
           <style>${css}</style>
           <script>${js}</script>
         </html>
-        `;
+      `);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [html, css, js]);
 
   return (
-  <div className="container">
-    <TopNavigation />
-    <div className="main">
+    <>
       <div className="pane top-pane">
         <Editor
           language="xml"
           displayName="HTML"
           value={html}
-          className="html"
           onChange={setHtml}
         />
         <Editor
           language="css"
           displayName="CSS"
           value={css}
-          onChange={setcss}
+          onChange={setCss}
         />
-
         <Editor
           language="javascript"
-          displayName="JavaScript"
+          displayName="JS"
           value={js}
-          onChange={setjs}
+          onChange={setJs}
         />
       </div>
-
-      <div className="output">
+      <div className="pane">
         <iframe
           srcDoc={srcDoc}
           title="output"
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-modals"
           frameBorder="0"
           width="100%"
           height="100%"
         />
-        </div>
-
       </div>
-      <Footer />
-    </div>
-    
+    </>
   );
 }
 
