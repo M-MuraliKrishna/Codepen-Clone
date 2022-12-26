@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { toHtml } from "@fortawesome/fontawesome-svg-core";
+// import { toHtml } from "@fortawesome/fontawesome-svg-core";
 
 function App() {
   const [html, setHtml] = useLocalStorage("html", "");
